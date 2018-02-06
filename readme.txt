@@ -92,3 +92,4 @@ Will authenticate with JWT
 #########################
 Create an Auth Route
 #########################
+Note: Must require the jwt package.

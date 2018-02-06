@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import Hapi from 'hapi';
 import Knex from './knex';
 
@@ -51,6 +52,50 @@ server.route({
     };
 
     return getData();
+  },
+});
+
+server.route({
+  method: 'POST',
+  path: '/auth',
+  handler: async (request) => {
+    const { username, password } = request.payload;
+
+    const getOperation = async () => {
+      const userToken = await Knex('users')
+        .where({ username })
+        .select('guid', 'password')
+        .then(([user]) => {
+          if (!user) {
+            return {
+              error: true,
+              errMessage: 'Specified user not found',
+            };
+          }
+
+          if (user.password === password) {
+            const token = jwt.sign({
+              username,
+              scope: user.guid,
+            }, 'vZiYpmTzqXMp8PpYXKwqc9ShQ1UhyAfy', {
+              algorithm: 'HS256',
+              expiresIn: '1h',
+            });
+
+            return {
+              token,
+              scope: user.guid,
+            };
+          }
+
+          return 'Incorrect password!';
+        })
+        .catch(() => 'Server-side error!');
+
+      return userToken;
+    };
+
+    return getOperation();
   },
 });
 
