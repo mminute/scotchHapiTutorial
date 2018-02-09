@@ -92,4 +92,4 @@ Will authenticate with JWT
 #########################
 Create an Auth Route
 #########################
-Note: Must "import jwt from 'jsonwebtoken';" to jwt.sign
+Note: Must require the jwt package.
