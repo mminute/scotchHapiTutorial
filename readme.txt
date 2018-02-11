@@ -93,3 +93,8 @@ Will authenticate with JWT
 Create an Auth Route
 #########################
 Note: Must require the jwt package.
+
+Got this working with Hapi v17 using this hack:
+https://github.com/dwyl/hapi-auth-jwt2/pull/249#issuecomment-350432038
+
+https://auth0.com/blog/developing-restful-apis-with-hapijs/
