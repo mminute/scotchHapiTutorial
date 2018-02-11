@@ -1,3 +1,4 @@
+import GUID from 'node-uuid';
 import jwt from 'jsonwebtoken';
 import Hapi from 'hapi';
 import Knex from './knex';
@@ -52,9 +53,31 @@ const registerRoutes = () => {
   server.route({
     path: '/birds',
     method: 'POST',
-    config: { auth: { strategy: 'token' } },
+    // config: { auth: { strategy: 'token' } },
     handler: (request, h) => {
       const { bird } = request.payload;
+      // const guid = GUID.v4();
+
+      const insertOperation = async () => {
+        const createdBird = await Knex('birds').insert({
+          // owner: request.auth.credentials.scope,
+          name: bird.name,
+          species: bird.species,
+          picture_url: bird.picture_url,
+          // guid,
+        }).then(() => {
+          return {
+            // data: guid,
+            message: 'Succesfully created bird',
+          };
+        }).catch(() => {
+          'Server-side error';
+        });
+
+        return createdBird;
+      };
+
+      return insertOperation();
     },
   });
 
